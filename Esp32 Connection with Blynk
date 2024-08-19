@@ -1,0 +1,71 @@
+// Code for the program used in arduino
+#include <LiquidCrystal_I2C.h>
+#include <Blynk.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+
+// Define LCD dimensions
+const int lcdColumns = 16;
+const int lcdRows = 2;
+
+// Initialize the LCD with I2C address 0x27
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+
+// Define pin numbers
+const int sensorInputPin = 34; // Pin connected to the sensor
+const int buzzerPin = 32;      // Pin connected to the buzzer
+const int fanRelayPin = 27;    // Pin connected to the relay for the exhaust fan
+
+// Blynk authentication token
+const char auth[] = "Mk22NuPX-zp-JFnpBEhOa_Zno7P3oLQf";
+// WiFi credentials
+const char ssid[] = "wifi name"; // your wifi name
+const char pass[] = "ibbbhybtycftc"; // your password
+
+// Create a BlynkTimer instance
+BlynkTimer timer;
+
+// Function to read the sensor and control the buzzer and fan
+void sendSensor()
+{
+  // Read the analog value from the sensor
+  int sensorValue = analogRead(sensorInputPin);
+  Serial.println(sensorValue);
+  
+  // Display the sensor value on the LCD
+  lcd.setCursor(0, 0);
+  lcd.print("CO: ");
+  lcd.print(sensorValue);
+
+  // Check if the sensor value exceeds the threshold
+  if (sensorValue > 1000) {
+    Blynk.logEvent("pollution_alert", "Adverse effect");
+    digitalWrite(buzzerPin, HIGH); // Activate the buzzer
+    digitalWrite(fanRelayPin, HIGH); // Activate the exhaust fan
+  } else {
+    digitalWrite(buzzerPin, LOW); // Deactivate the buzzer
+    digitalWrite(fanRelayPin, LOW); // Deactivate the exhaust fan
+  }
+  
+  delay(400); // Short delay before updating Blynk
+  Blynk.virtualWrite(V2, sensorValue); // Send the sensor value to Blynk app
+  delay(300); // Additional delay to avoid rapid updates
+}
+
+void setup()
+{
+  Serial.begin(9600); // Initialize serial communication
+  lcd.init(); // Initialize the LCD
+  lcd.backlight(); // Turn on the LCD backlight
+  Blynk.begin(auth, ssid, pass); // Connect to Blynk server
+  timer.setInterval(100L, sendSensor); // Set the interval for the sensor function
+  pinMode(buzzerPin, OUTPUT); // Set the buzzer pin as output
+  pinMode(fanRelayPin, OUTPUT); // Set the fan relay pin as output
+}
+
+void loop()
+{
+  Blynk.run(); // Run Blynk's event loop
+  timer.run(); // Run the timer to execute scheduled tasks
+}
