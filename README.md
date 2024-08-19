@@ -1,6 +1,8 @@
 # Air-Pollution-Monitoring-And-Purification
 Author's Name
 1. Aditya Raj 2. Om Prakash Patel
+
+
 Addressing air pollution effectively requires a combination of monitoring, technological innovation, policy-making, and public awareness. Each component plays a role in reducing pollution and protecting health and the environment.
 Welcome to the Air Pollution Monitoring and Purification System project! This project aims to monitor and improve air quality through a combination of real-time data collection, advanced filtration technologies, and actionable insights. The system is designed to address both indoor and outdoor air pollution, ensuring a healthier environment and better quality of life.
 
