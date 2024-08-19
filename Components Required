@@ -1,0 +1,15 @@
+Components Required:
+Esp32 NodeMCU
+Arduino(not necessary if mcu is available)
+B type connector cable
+Mq135
+Mq7
+Dht11
+Realay Module
+I2C 
+LCD 16x2
+LED
+Breadboard
+Exauster Fan
+Buzzers
+Jumper Wires
