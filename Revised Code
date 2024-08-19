@@ -1,0 +1,103 @@
+#include <LiquidCrystal_I2C.h>
+#include <Blynk.h>
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+#include <DHT.h>
+
+int lcdColumns = 16;
+int lcdRows = 2;
+
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+DHT dht(5, DHT22);
+
+int mq6_pin = 34;
+int mq7_pin = 33;
+int mq135_pin = 35; // GPIO pin connected to MQ135
+int green_led_pin = 26; // GPIO pin connected to the green LED for MQ6
+int red_led_pin = 12; // GPIO pin connected to the red LED for MQ7
+int white_led_pin = 15; // GPIO pin connected to the white LED for MQ135
+
+char auth[] = "Mk22NuPX-zp-JFnpBEhOa_Zno7P3oLQf";
+char ssid[] = "Wifi_Name";
+char pass[] = "hyugyuftyf";
+
+BlynkTimer timer;
+
+void sendSensors()
+{
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  int mq6_value = analogRead(mq6_pin);
+  int mq7_value = analogRead(mq7_pin);
+  int mq135_value = analogRead(mq135_pin);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(temperature);
+  lcd.print("C");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Humidity: ");
+  lcd.print(humidity);
+  lcd.print("%");
+
+  lcd.setCursor(0, lcdRows);
+  lcd.print("MQ6: ");
+  lcd.print(mq6_value);
+
+  lcd.setCursor(0, lcdRows + 1);
+  lcd.print("MQ7: ");
+  lcd.print(mq7_value);
+
+  lcd.setCursor(lcdColumns / 2, lcdRows);
+  lcd.print("MQ135: ");
+  lcd.print(mq135_value);
+
+  if (mq6_value > 1500) {
+    Blynk.logEvent("mq6_alert", "Adverse effect");
+    digitalWrite(green_led_pin, HIGH); // Turn on the green LED for MQ6
+  } else {
+    digitalWrite(green_led_pin, LOW); // Turn off the green LED for MQ6
+  }
+
+  if (mq7_value > 3000) {
+    Blynk.logEvent("mq7_alert", "Adverse effect");
+    digitalWrite(red_led_pin, HIGH); // Turn on the red LED for MQ7
+  } else {
+    digitalWrite(red_led_pin, LOW); // Turn off the red LED for MQ7
+  }
+
+  if (mq135_value > 1500) {
+    Blynk.logEvent("mq135_alert", "Adverse effect");
+    digitalWrite(white_led_pin, HIGH); // Turn on the white LED for MQ135
+  } else {
+    digitalWrite(white_led_pin, LOW); // Turn off the white LED for MQ135
+  }
+
+  Blynk.virtualWrite(V2, mq135_value);
+  Blynk.virtualWrite(V3, mq6_value);
+  Blynk.virtualWrite(V4, mq7_value);
+  Blynk.virtualWrite(V0, temperature);
+  Blynk.virtualWrite(V1, humidity);
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+  dht.begin();
+  Blynk.begin(auth, ssid, pass);
+  timer.setInterval(100L, sendSensors);
+  pinMode(green_led_pin, OUTPUT);
+  pinMode(red_led_pin, OUTPUT);
+  pinMode(white_led_pin, OUTPUT);
+}
+
+void loop()
+{
+  Blynk.run();
+  timer.run();
+}
