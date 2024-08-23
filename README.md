@@ -10,7 +10,7 @@ This system combines real-time air quality monitoring with advanced filtration t
 To clone this repository to your local machine, use the following command:
 
 ```bash
-git clone https://github.com/yourusername/your-repository.git
+git clone https://github.com/aditya22101/Air-Pollution-Monitoring-And-Purification.git
 ```
 Features
 Real-Time Air Quality Monitoring: Measures pollutants such as particulate matter (PM2.5 and PM10), carbon monoxide (CO), and ozone (O3) using ESP32-compatible sensors.
