@@ -7,6 +7,11 @@ Welcome to the Air Pollution Monitoring and Purification System project using ES
 Project Overview
 This system combines real-time air quality monitoring with advanced filtration technologies to address both indoor and outdoor air pollution. It provides actionable insights through data collection and user alerts, improving overall environmental health.
 
+To clone this repository to your local machine, use the following command:
+
+```bash
+git clone https://github.com/yourusername/your-repository.git
+
 Features
 Real-Time Air Quality Monitoring: Measures pollutants such as particulate matter (PM2.5 and PM10), carbon monoxide (CO), and ozone (O3) using ESP32-compatible sensors.
 Data Logging: Collects and logs data for analysis.
