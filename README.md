@@ -61,14 +61,7 @@ Export data from the Blynk app for further analysis or reporting.
 Contact
 For questions or support, please contact [Aditya Raj] at [aditya22101@iiitnr.edu.in].
 
-Feel free to adjust the details and instructions according to your specific project setup and requirements.
 
 
 
 
-
-
-
-
-
-Feel free to adjust the content to better suit your specific project needs or details.
